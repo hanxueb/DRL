@@ -127,8 +127,8 @@ class PolicyModel(tf.keras.models.Model):
         return layers
 
 #Build all policy networks
-class PolicyPAPPO(Policy):
-    algorithm = "PAPPO"
+class PolicyPASPPO(Policy):
+    algorithm = "PASPPO"
 
     class Model(tf.keras.models.Model):
         def __init__(self, modtype, trainable=True):
@@ -178,7 +178,7 @@ class PolicyPAPPO(Policy):
                     HIDDEN_SIZES = OUTPUT_HIDDEN_LAYER_SIZES
                 self.Pi.append(PolicyModel(Pi_insize, Pi_outsize, HIDDEN_SIZES, trainable))
 
-        #To calculate the probability of the output, and avoid duplicate code in learnerPAPPO
+        #To calculate the probability of the output, and avoid duplicate code in learnerPASPPO
         def make_outprobs(self, pi, zchoices, logprobs, legal_ph):
             legal_row_len = legal_ph.shape[2]
             if pi < legal_row_len:
