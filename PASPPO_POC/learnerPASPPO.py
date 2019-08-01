@@ -1,5 +1,5 @@
 """
-Implementation of PAPPO, based on papers:
+Implementation of PASPPO, based on papers:
 
 Hybrid Actor-Critic Reinforcement Learning in Parameterized Action Space
 https://arxiv.org/pdf/1903.01344.pdf
@@ -38,7 +38,7 @@ np.set_printoptions(linewidth=np.nan, suppress=True)
 SHARED_LAYERS = 3
 VALUE_HIDDEN_LAYER_SIZES = [40, 20]
 
-class PappoSettings:
+class PasppoSettings:
     ACTOR_LEARNING_RATE = 5e-4
     CRITIC_LEARNING_RATE = 5e-5
 
@@ -145,8 +145,8 @@ class ActionPiModel(tf.keras.models.Model):
             pi_entropy_loss = pi_entropy_loss + tf.reduce_sum(Pi_outprobs[pi]*tf.exp(Pi_outprobs[pi]), axis=1)
         return pivalues, illegalsums, pi_entropy_loss
 
-class PAPPONetwork(learnerBase):
-    algorithm = "PAPPO"
+class PASPPONetwork(learnerBase):
+    algorithm = "PASPPO"
     
     def __init__(self, modtype, modname, trainable=True):
         super().__init__(modtype, modname, trainable)      
@@ -161,11 +161,11 @@ class PAPPONetwork(learnerBase):
             self.value_network = ValueModel(self.actor.model, VALUE_HIDDEN_LAYER_SIZES)
             self.actionpidmodel = ActionPiModel(self.actor.model, trainable=True)
             
-        self.train_optimizer = tf.train.AdamOptimizer(PappoSettings.CRITIC_LEARNING_RATE)
+        self.train_optimizer = tf.train.AdamOptimizer(PasppoSettings.CRITIC_LEARNING_RATE)
 
         self.summary_writer = tf.contrib.summary.create_file_writer(Path("./tensorboard"), flush_millis=10000)
         #self.init_done()
-        log.debug("PAPPO is created")
+        log.debug("PASPPO is created")
 
     def compute_loss(self, batch):
         
@@ -202,13 +202,13 @@ class PAPPONetwork(learnerBase):
         self.actor_pivalues, self.actor_illeaglpisums, entropy_loss = \
             self.actionpidmodel(state_batch, action_batch, legal_acts_batch)
         ratio = self.actor_pivalues / piold
-        clipped_ratio = tf.clip_by_value(ratio, 1. - PappoSettings.PPOEPSILON, 1. + PappoSettings.PPOEPSILON)
+        clipped_ratio = tf.clip_by_value(ratio, 1. - PasppoSettings.PPOEPSILON, 1. + PasppoSettings.PPOEPSILON)
         surrogate = ratio*self.advantages
         clipsurrogate = clipped_ratio*self.advantages
         policy_loss = -tf.minimum(surrogate, clipsurrogate)
         illegal_loss = self.actor_illeaglpisums
-        total_loss = tf.reduce_mean(PappoSettings.C1 * value_loss + PappoSettings.C2 * policy_loss + \
-                                    PappoSettings.C3 * illegal_loss + PappoSettings.C4 * entropy_loss)
+        total_loss = tf.reduce_mean(PasppoSettings.C1 * value_loss + PasppoSettings.C2 * policy_loss + \
+                                    PasppoSettings.C3 * illegal_loss + PasppoSettings.C4 * entropy_loss)
         self.policy_variables = self.actor.model.variables
         self.learner_variables = self.value_network.variables + self.actionpidmodel.variables
         self.all_parameters = self.policy_variables + self.learner_variables
@@ -238,7 +238,7 @@ class PAPPONetwork(learnerBase):
         while(True):
             batch =  self.exp_buff.sample(duration=8.0)
             if(len(batch) == 0):
-               log.debug("No eligible UEs in PAPPO train(out of %d UEs", len(self.exp_buff))
+               log.debug("No eligible UEs in PASPPO train(out of %d UEs", len(self.exp_buff))
                await asyncio.sleep(3)
                start_time = time.time()
                continue
@@ -253,12 +253,12 @@ class PAPPONetwork(learnerBase):
                 log.debug("PPO value loss: %f, policy_loss: %f, illegal loss: %f, entropy_loss: %f, in eps: %d", \
                     self.value_loss, self.policy_loss, self.illegal_loss, self.entropy_loss, self.total_eps)
                 with self.summary_writer.as_default(), tf.contrib.summary.always_record_summaries():
-                    self.value_loss_summary = tf.contrib.summary.scalar("PAPPO_value_loss", tf.reduce_mean(self.value_loss))
-                    self.policy_loss_summary = tf.contrib.summary.scalar("PAPPO_policy_loss", tf.reduce_mean(self.policy_loss))
-                    self.illegal_loss_summary = tf.contrib.summary.scalar("PAPPO_illegal_loss", tf.reduce_mean(self.illegal_loss))
-                    self.entropy_loss_summary = tf.contrib.summary.scalar("PAPPO_entropy_loss", tf.reduce_mean(self.entropy_loss))
+                    self.value_loss_summary = tf.contrib.summary.scalar("PASPPO_value_loss", tf.reduce_mean(self.value_loss))
+                    self.policy_loss_summary = tf.contrib.summary.scalar("PASPPO_policy_loss", tf.reduce_mean(self.policy_loss))
+                    self.illegal_loss_summary = tf.contrib.summary.scalar("PASPPO_illegal_loss", tf.reduce_mean(self.illegal_loss))
+                    self.entropy_loss_summary = tf.contrib.summary.scalar("PASPPO_entropy_loss", tf.reduce_mean(self.entropy_loss))
 
-            if self.total_eps % PappoSettings.SAVE_CHECKPOINT ==0:
+            if self.total_eps % PasppoSettings.SAVE_CHECKPOINT ==0:
                 self.iteration_number +=1
                 log.debug("PPO iteration %d takes %f seconds", self.iteration_number, time.time() - start_time)
                 save_path = self.checkpoint.save(file_prefix=checkpoint_prefix)
