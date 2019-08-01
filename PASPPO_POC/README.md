@@ -1,12 +1,10 @@
 
 Implementation(Proof Of Concept) of Parameterized Action Space Proximal Policy Optimization, based on papers:
-Hierarchical Approaches for Reinforcement Learning in Parameterized Action Space
+1) Hierarchical Approaches for Reinforcement Learning in Parameterized Action Space
 https://arxiv.org/abs/1810.09656
-
-Hybrid Actor-Critic Reinforcement Learning in Parameterized Action Space
+2) Hybrid Actor-Critic Reinforcement Learning in Parameterized Action Space
 https://arxiv.org/pdf/1903.01344.pdf
-
-Proximal Policy Optimization Algorithms
+3) Proximal Policy Optimization Algorithms
 https://arxiv.org/abs/1707.06347
 
 Parameterized Action Space Proximal Policy Optimization illustration (each node is a neural network)
