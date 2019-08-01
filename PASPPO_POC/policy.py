@@ -75,6 +75,6 @@ class Policy(object, metaclass=Register):
                                                lambda: self.saver.save(sess, fname))
         return save_path
 
-import policyPAPPO
+import policyPASPPO
 
 
