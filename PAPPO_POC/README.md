@@ -1,5 +1,5 @@
 
-Implementation(Proof Of Concept) of Parameterized Action Space Proximal Policy Optimization), based on papers:
+Implementation(Proof Of Concept) of Parameterized Action Space Proximal Policy Optimization, based on papers:
 
 Hybrid Actor-Critic Reinforcement Learning in Parameterized Action Space
 https://arxiv.org/pdf/1903.01344.pdf
@@ -10,10 +10,10 @@ https://arxiv.org/abs/1810.09656
 Proximal Policy Optimization Algorithms
 https://arxiv.org/abs/1707.06347
 
-
+Parameterized Action Space Proximal Policy Optimization illustration (each node is a neural network)
 ![Parameterized Action Space](https://github.com/hanxueb/DRL/blob/master/PAPPO_POC/PAPPO.png)
 
-can support to flexible layers based on configuration 
+can support flexible layers based on configuration 
 
 1) learnerBase.py: Common operations of different algorithms.
 2) learnerPAPPO.py: PAPPO implementation with tensorflow eager execution, build network based on modtype(model type class) and modname(model name) and train. 
