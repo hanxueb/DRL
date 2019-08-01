@@ -210,7 +210,7 @@ class PolicyPAPPO(Policy):
 
                 return tf.where(valid, outprobs, dummy_outprobs)
 
-        #To calculate the probability of pivalue, pivalue is used in PPO oldpi/current pi
+        #To calculate pivalue to be used in PPO old pi/current pi
         def make_pivalues(self, Pi_choices, Pi_outprobs):
             batchsize = tf.shape(Pi_outprobs[0])[0]
             itemnumbers = tf.expand_dims(tf.range(batchsize), -1)
@@ -222,7 +222,7 @@ class PolicyPAPPO(Policy):
             pivalues = tf.exp(pivalues)
             return pivalues
 
-        #To calculate the probability of the output, avoid duplicate code in learnerPAPPO
+        #To calculate probability of illegal actions and to miminze the illegal actions
         def make_illegalsums(self, legal_ph, Pi_logprobs):
             legalpdf = tf.zeros_like(Pi_logprobs[0])
             illegalpdf = tf.zeros_like(Pi_logprobs[0])
@@ -312,7 +312,7 @@ class PolicyPAPPO(Policy):
         
         with tf.variable_scope(self.scope, auxiliary_name_scope=False) as vs2:
             with tf.name_scope(vs2.original_name_scope):
-                self.model = PolicyPAPPO.Model(self.modtype, trainable=trainable)        
+                self.model = PolicyPASPPO.Model(self.modtype, trainable=trainable)        
     def predict_action(self, sess, statevec, legal_actions):
         self.action_vector, self.pivalues, self.waitpivalues, self.illegalsums, self.pi_outprobs = self.model(state, legal_actions)
         self.init_done()
@@ -379,7 +379,7 @@ if __name__ == "__main__":
         def __init__(self):
             self.string = ''
     modname = ModelName()
-    modname.string = "PAPPO"
+    modname.string = "PASPPO"
 
     class LegalActions():
         actionlistlen = 20
@@ -391,7 +391,7 @@ if __name__ == "__main__":
     #graph_manager = graph.as_default()
     #graph_manager.__enter__()
     session = tf.Session()
-    model = PolicyPAPPO(modtype, modname, trainable=True)
+    model = PolicyPASPPO(modtype, modname, trainable=True)
 
     state_vector = np.array([0.5]*20 + [0.8]*63, dtype=np.float32)
     state_vector = np.stack((state_vector, state_vector, state_vector, state_vector))
