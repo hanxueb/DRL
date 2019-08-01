@@ -11,9 +11,9 @@ Proximal Policy Optimization Algorithms
 https://arxiv.org/abs/1707.06347
 
 Parameterized Action Space Proximal Policy Optimization illustration (each node is a neural network)
-![Parameterized Action Space](https://github.com/hanxueb/DRL/blob/master/PAPPO_POC/PAPPO.png)
+![Parameterized Action Space](https://github.com/hanxueb/DRL/blob/master/PASPPO_POC/PASPPO.png)
 
-can support flexible layers based on configuration 
+Number of layers, input, output and hidden layers can be configured.
 
 1) learnerBase.py: Common operations of different algorithms.
 2) learnerPAPPO.py: PAPPO implementation with tensorflow eager execution, build network based on modtype(model type class) and modname(model name) and train. 
