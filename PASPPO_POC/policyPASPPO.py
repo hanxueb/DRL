@@ -314,7 +314,7 @@ class PolicyPASPPO(Policy):
             with tf.name_scope(vs2.original_name_scope):
                 self.model = PolicyPASPPO.Model(self.modtype, trainable=trainable)        
     def predict_action(self, sess, statevec, legal_actions):
-        self.action_vector, self.pivalues, self.waitpivalues, self.illegalsums, self.pi_outprobs = self.model(state, legal_actions)
+        self.action_vector, self.pivalues, self.waitpivalues, self.illegalsums, self.pi_outprobs = self.model(statevec, legal_actions)
         self.init_done()
         return self.action_vector, self.pivalues, self.waitpivalues, self.illegalsums
 
