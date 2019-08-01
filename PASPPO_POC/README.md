@@ -12,6 +12,8 @@ Parameterized Action Space Proximal Policy Optimization illustration (each node 
 
 Number of layers, input, output and hidden layers can be configured.
 
+Python Files:
+
 1) learnerBase.py: Base class of algorithms, to extend with new algorithms easily.
 2) learnerPASPPO.py: PAPPO implementation with tensorflow eager execution, build network based on modtype(model type class) and modname(model name) and train. 
 3) policy.py:  Base class of policy networks, to extend with new policy networks easily.
