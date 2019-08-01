@@ -178,7 +178,7 @@ class PASPPONetwork(learnerBase):
         eps_done_batch = np.array([exp_record.doneflag for exp_record in batch])
         legal_acts_batch = np.array([exp_record.legal_acts for exp_record in batch])
 
-        gammas = (1.0 - eps_done_batch)*np.power(PappoSettings.DISCOUNT, np.maximum(duration_batch, 0.01))
+        gammas = (1.0 - eps_done_batch)*np.power(PasppoSettings.DISCOUNT, np.maximum(duration_batch, 0.01))
         unitsquare =  np.full((len(duration_batch), len(duration_batch)), 1.0, dtype=np.float32)
         udunit = np.triu(unitsquare)
         gammasquare = np.copy(udunit)
@@ -228,7 +228,7 @@ class PASPPONetwork(learnerBase):
             if ckptfile is None:
                 log.debug("Could not restore checkpoint")
             else:
-                log.debug("PPO checkpoint is restored")
+                log.debug("PASPPO checkpoint is restored")
         except:
             log.debug("Exception in checkpoint restore")
 
@@ -250,7 +250,7 @@ class PASPPONetwork(learnerBase):
            
             self.total_eps +=1
             if self.total_eps % 100 == 0:
-                log.debug("PPO value loss: %f, policy_loss: %f, illegal loss: %f, entropy_loss: %f, in eps: %d", \
+                log.debug("PASPPO value loss: %f, policy_loss: %f, illegal loss: %f, entropy_loss: %f, in eps: %d", \
                     self.value_loss, self.policy_loss, self.illegal_loss, self.entropy_loss, self.total_eps)
                 with self.summary_writer.as_default(), tf.contrib.summary.always_record_summaries():
                     self.value_loss_summary = tf.contrib.summary.scalar("PASPPO_value_loss", tf.reduce_mean(self.value_loss))
@@ -271,7 +271,7 @@ if __name__ == "__main__":
     log.setLevel(logging.DEBUG)
 
     import struct
-    from policyPAPPO import PolicyPAPPO
+    from policyPASPPO import PolicyPASPPO
 
     class ModelType():
         def __init__(self):
@@ -314,14 +314,14 @@ if __name__ == "__main__":
 
     #how to chain the network, -2 means no chain, 0 means get the first network's output
     modtype.givens = [[-2], [-2], [-2], [0], [0], [0, 4]]
-    modtype.algotype = "PAPPO"
+    modtype.algotype = "PASPPO"
 
 
     class ModelName():
         def __init__(self):
             self.string = ''
     modname = ModelName()
-    modname.string = "PAPPO"
+    modname.string = "PASPPO"
 
     class LegalActions():
         actionlistlen = 20
@@ -355,7 +355,7 @@ if __name__ == "__main__":
                                     [-1, -1, -1],
                                     [-1, -1, -1]])
 
-    model = PAPPONetwork(modtype, modname, trainable=True)
+    model = PASPPONetwork(modtype, modname, trainable=True)
 
     #simulate some input data
     for i in range(100):
