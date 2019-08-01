@@ -1,11 +1,10 @@
 
 Implementation(Proof Of Concept) of Parameterized Action Space Proximal Policy Optimization, based on papers:
+Hierarchical Approaches for Reinforcement Learning in Parameterized Action Space
+https://arxiv.org/abs/1810.09656
 
 Hybrid Actor-Critic Reinforcement Learning in Parameterized Action Space
 https://arxiv.org/pdf/1903.01344.pdf
-
-Hierarchical Approaches for Reinforcement Learning in Parameterized Action Space
-https://arxiv.org/abs/1810.09656
 
 Proximal Policy Optimization Algorithms
 https://arxiv.org/abs/1707.06347
@@ -15,11 +14,8 @@ Parameterized Action Space Proximal Policy Optimization illustration (each node 
 
 Number of layers, input, output and hidden layers can be configured.
 
-1) learnerBase.py: Common operations of different algorithms.
-2) learnerPAPPO.py: PAPPO implementation with tensorflow eager execution, build network based on modtype(model type class) and modname(model name) and train. 
-3) policyPAPPO.py:  policy network of PAPPO
-4) experience_buffer.py: Data structure for saving experience item(State, action, next state, reward...)
-
-To add:
-1) A3C, SDQN, DDPG, D4PG algorithms.
-2) Advantages calculation as in PPO Paper
+1) learnerBase.py: Base class of algorithms, to extend with new algorithms easily.
+2) learnerPASPPO.py: PAPPO implementation with tensorflow eager execution, build network based on modtype(model type class) and modname(model name) and train. 
+3) policy.py:  Base class of policy networks, to extend with new policy networks easily.
+4) policyPASPPO.py:  Policy network of PAPPO.
+5) experience_buffer.py: Data structure for saving experience item(State, action, next state, reward...).
