@@ -140,5 +140,5 @@ class learnerBase(object, metaclass=Register):
             self.sess.close()
             self.sess = None
 
-#import learnerPAPPO
+#import learnerPASPPO
 
